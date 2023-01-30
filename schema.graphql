@@ -20,8 +20,6 @@ type Spell @entity {
   description: String!
   "State of the spell"
   state: SpellState!
-  "Governance Framework that spell is part of"
-  governanceFramework: GovernanceFramework!
 
   "Block number spell was created in"
   creationBlock: BigInt!
@@ -59,12 +57,14 @@ type Spell @entity {
   "Votes associated to this spell"
   votes: [Vote!]! @derivedFrom(field: "spell")
 }
+
 enum SpellState {
   ACTIVE
   LIFTED
   SCHEDULED
   CAST
 }
+
 type DelegateAdmin @entity {
   "A delegate admin is an address controls a Vote Delegate contract"
   id: String!
@@ -75,19 +75,19 @@ type DelegateAdmin @entity {
 type Delegate @entity {
   "A Delegate is any address that has been delegated with voting tokens by a token holder, id is the blockchain address of said delegate"
   id: String!
-  "Is a vote delegate contract"
-  isVoteDelegate: Boolean
 
   "Delegate admin is the address that controls a Vote Delegate contract"
   delegateAdmin: DelegateAdmin
 
   "Delegate voting power expressed in the smallest unit of the token"
   votingPowerRaw: BigInt!
+
   "Delegate voting power expressed as a BigDecimal normalized value"
   votingPower: BigDecimal!
 
   "Delegations that this contract has received"
   delegations: [Delegation!]!
+
   "Number of token holders delegate represents"
   tokenHoldersRepresented: Int!
 
@@ -95,14 +95,14 @@ type Delegate @entity {
   currentSpells: [Spell!]!
 
   "Votes that a delegate has made in different spells"
-  votes: [Vote!]! @derivedFrom(field: "voter")
+  executiveVotes: [Vote!]! @derivedFrom(field: "voter")
   "Number of spells voted on"
-  numberVotes: Int!
+  numberExecutiveVotes: Int!
 
-  "Poll votes associated to this spell"
-  poleVotes: [PollVote!]! @derivedFrom(field: "voter")
-  "Number of spells voted on"
-  numberPoleVotes: Int!
+  "Poll votes associated to this delegate"
+  pollVotes: [PollVote!]! @derivedFrom(field: "voter")
+  "Number of polls voted on"
+  numberPollVotes: Int!
 }
 
 type Delegation @entity {
@@ -179,6 +179,6 @@ type PollVote @entity {
 type Poll @entity {
   "Poll's id"
   id: String!
-  "Poll votes associated to this spell"
-  polevotes: [PollVote!]! @derivedFrom(field: "poll")
+  "Poll votes associated to this poll"
+  pollVotes: [PollVote!]! @derivedFrom(field: "poll")
 }

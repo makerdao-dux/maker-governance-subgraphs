@@ -48,7 +48,6 @@ export function getDelegate(address: string): Delegate {
   let delegate = Delegate.load(address);
   if (!delegate) {
     delegate = new Delegate(address);
-    delegate.isVoteDelegate = false;
     delegate.votingPowerRaw = BIGINT_ZERO;
     delegate.votingPower = BIGDECIMAL_ZERO;
     delegate.delegations = [];
@@ -136,7 +135,7 @@ export function createSlate(slateID: Bytes, event: ethereum.Event): Slate {
       } else {
         spell.expiryTime = BIGINT_ZERO;
       }
-      spell.governanceFramework = event.address.toHexString();
+      // spell.governanceFramework = event.address.toHexString();
       spell.totalVotes = BIGINT_ZERO;
       spell.totalWeightedVotes = BIGINT_ZERO;
       spell.save();
