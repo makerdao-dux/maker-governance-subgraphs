@@ -11,8 +11,18 @@ export function handleCreateVoteDelegate(event: CreateVoteDelegate): void {
 
   // TODO: Load delegate admin, if it does not exist, create it and assing the delegate contract.
   // TODO: Create the delegate contract and assign the delegate admin.
-  
-  let admin = DelegateAdmin.load(event.transaction.from.toHex())
+  // https://etherscan.io/address/0xD897F108670903D1d6070fcf818f9db3615AF272#code
+  // event.params.delegate and event.transcation.from.toHex() should be the same
+  const delegateAdminAddress = event.transaction.from.toHex()
+  let admin = DelegateAdmin.load(delegateAdminAddress)
+  if (!admin) {
+    admin = new DelegateAdmin(delegateAdminAddress)
+    admin.voteDelegate = event.params.voteDelegate
+    admin.save()
+  }
+
+  // Create voteDelegate
+  VoteDelegate.create(event.params.voteDelegate, delegateAdminAddress);
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
