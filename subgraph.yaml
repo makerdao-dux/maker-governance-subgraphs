@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
@@ -10,7 +10,7 @@ dataSources:
       abi: DelegateFactory
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - CreateVoteDelegate
@@ -21,3 +21,95 @@ dataSources:
         - event: CreateVoteDelegate(indexed address,indexed address)
           handler: handleCreateVoteDelegate
       file: ./src/delegate-factory.ts
+  - kind: ethereum
+    name: DSChief
+    network: mainnet
+    source:
+      address: "0x0a3f6849f78076aefadf113f5bed87720274ddc0"
+      abi: DSChief
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Etch
+        - LogNote
+        - LogSetAuthority
+        - LogSetOwner
+      abis:
+        - name: DSChief
+          file: ./abis/DSChief.json
+      eventHandlers:
+        - event: Etch(indexed bytes32)
+          handler: handleEtch
+        - event: LogNote(indexed bytes4,indexed address,indexed bytes32,indexed
+            bytes32,uint256,bytes)
+          handler: handleLogNote
+        - event: LogSetAuthority(indexed address)
+          handler: handleLogSetAuthority
+        - event: LogSetOwner(indexed address)
+          handler: handleLogSetOwner
+      file: ./src/ds-chief.ts
+  - kind: ethereum
+    name: PollingEmitter
+    network: mainnet
+    source:
+      address: "0xf9be8f0945acddeedaa64dfca5fe9629d0cf8e5d"
+      abi: PollingEmitter
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - PollCreated
+        - PollWithdrawn
+        - Voted
+      abis:
+        - name: PollingEmitter
+          file: ./abis/PollingEmitter.json
+      eventHandlers:
+        - event: PollCreated(indexed address,uint256,indexed uint256,uint256,uint256,string,string)
+          handler: handlePollCreated
+        - event: PollWithdrawn(indexed address,uint256,uint256)
+          handler: handlePollWithdrawn
+        - event: Voted(indexed address,indexed uint256,indexed uint256)
+          handler: handleVoted
+      file: ./src/polling-emitter.ts
+  - kind: ethereum
+    name: MKRToken
+    network: mainnet
+    source:
+      address: "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2"
+      abi: MKRToken
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Mint
+        - Burn
+        - MKRTokenLogSetAuthority
+        - MKRTokenLogSetOwner
+        - MKRTokenLogNote
+        - Transfer
+        - Approval
+      abis:
+        - name: MKRToken
+          file: ./abis/MKRToken.json
+      eventHandlers:
+        - event: Mint(indexed address,uint256)
+          handler: handleMint
+        - event: Burn(indexed address,uint256)
+          handler: handleBurn
+        - event: MKRTokenLogSetAuthority(indexed address)
+          handler: handleMKRTokenLogSetAuthority
+        - event: MKRTokenLogSetOwner(indexed address)
+          handler: handleMKRTokenLogSetOwner
+        - event: MKRTokenLogNote(indexed bytes4,indexed address,indexed bytes32,indexed
+            bytes32,uint256,bytes)
+          handler: handleMKRTokenLogNote
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+      file: ./src/mkr-token.ts

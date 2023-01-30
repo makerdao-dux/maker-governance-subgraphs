@@ -3,12 +3,16 @@ import {
   DelegateFactory,
   CreateVoteDelegate
 } from "../generated/DelegateFactory/DelegateFactory"
-import { ExampleEntity } from "../generated/schema"
+import { VoteDelegate } from "../generated/schema"
 
 export function handleCreateVoteDelegate(event: CreateVoteDelegate): void {
   // Entities can be loaded from the store using a string ID; this ID
   // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+
+  // TODO: Load delegate admin, if it does not exist, create it and assing the delegate contract.
+  // TODO: Create the delegate contract and assign the delegate admin.
+  
+  let admin = DelegateAdmin.load(event.transaction.from.toHex())
 
   // Entities only exist after they have been saved to the store;
   // `null` checks allow to create entities on demand
